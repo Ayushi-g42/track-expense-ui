@@ -30,6 +30,14 @@ export default function Sidebar() {
           <span className="sidebar-icon">💸</span>
           Expenses
         </Link>
+
+        <Link 
+          href="/incomes" 
+          className={`sidebar-link ${pathname === '/incomes' ? 'active' : ''}`}
+        >
+          <span className="sidebar-icon">💰</span>
+          Incomes
+        </Link>
       </nav>
     </aside>
   );

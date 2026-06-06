@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './features/auth/authSlice';
 import expenseReducer from './features/expenses/expenseSlice';
 import dashboardReducer from './features/dashboard/dashboardSlice';
+import incomeReducer from './features/incomes/incomeSlice';
 
 export const makeStore = () => {
   return configureStore({
@@ -9,6 +10,7 @@ export const makeStore = () => {
       auth: authReducer,
       expenses: expenseReducer,
       dashboard: dashboardReducer,
+      incomes: incomeReducer,
     },
   });
 };
