@@ -16,6 +16,20 @@
   --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
 }
 
+[data-theme='light'] {
+  --bg-primary: #f8fafc; /* Slate 50 */
+  --bg-secondary: #f1f5f9; /* Slate 100 */
+  --bg-card: rgba(255, 255, 255, 0.7); /* Glass effect */
+  --text-primary: #0f172a; /* Slate 900 */
+  --text-secondary: #475569; /* Slate 600 */
+  --accent-primary: #7c3aed; /* Violet 600 */
+  --accent-secondary: #a78bfa; /* Violet 400 */
+  --accent-glow: rgba(124, 58, 237, 0.3);
+  
+  --success: #059669; /* Emerald 600 */
+  --danger: #dc2626; /* Red 600 */
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -134,4 +148,22 @@ p {
   color: white;
   font-weight: 600;
   font-size: 1.2rem;
+}
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+  background-color: rgba(128, 128, 128, 0.2);
 }

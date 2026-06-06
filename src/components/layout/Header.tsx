@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAppSelector, useAppDispatch } from '../../lib/hooks';
 import { logout } from '../../lib/features/auth/authSlice';
+import { ThemeToggle } from './ThemeToggle';
 
 export default function Header() {
   const pathname = usePathname();
@@ -26,7 +27,8 @@ export default function Header() {
   return (
     <header className="dashboard-header">
       <h2 className="page-title">{getPageTitle()}</h2>
-      <div className="user-profile">
+      <div className="user-profile" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <ThemeToggle />
         {user && (() => {
           const profileImg = user?.profileImg ?? null;
 

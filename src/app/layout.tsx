@@ -13,6 +13,7 @@ export const metadata: Metadata = {
 };
 
 import StoreProvider from "./StoreProvider";
+import { ThemeProvider } from "./ThemeProvider";
 
 export default function RootLayout({
   children,
@@ -20,9 +21,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.variable}>
-        <StoreProvider>{children}</StoreProvider>
+        <ThemeProvider attribute="data-theme" defaultTheme="dark" enableSystem>
+          <StoreProvider>{children}</StoreProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
