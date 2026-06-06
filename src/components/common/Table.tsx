@@ -15,6 +15,9 @@ interface TableProps<T> {
   title: string;
   createButtonText?: string;
   createButtonLink?: string;
+  currentPage?: number;
+  totalPages?: number;
+  onPageChange?: (page: number) => void;
 }
 
 export default function Table<T extends Record<string, any>>({ 
@@ -22,7 +25,10 @@ export default function Table<T extends Record<string, any>>({
   data, 
   title, 
   createButtonText, 
-  createButtonLink 
+  createButtonLink,
+  currentPage,
+  totalPages,
+  onPageChange
 }: TableProps<T>) {
   const [filterText, setFilterText] = useState('');
 
@@ -84,6 +90,28 @@ export default function Table<T extends Record<string, any>>({
         </table>
       </div>
 
+      {currentPage !== undefined && totalPages !== undefined && totalPages > 0 && (
+        <div className="table-pagination">
+          <button 
+            className="btn-secondary pagination-btn"
+            disabled={currentPage <= 1}
+            onClick={() => onPageChange && onPageChange(currentPage - 1)}
+          >
+            Previous
+          </button>
+          <span className="pagination-text">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button 
+            className="btn-secondary pagination-btn"
+            disabled={currentPage >= totalPages}
+            onClick={() => onPageChange && onPageChange(currentPage + 1)}
+          >
+            Next
+          </button>
+        </div>
+      )}
+
       <style jsx>{`
         .table-container {
           padding: 24px;
@@ -142,6 +170,21 @@ export default function Table<T extends Record<string, any>>({
         }
         .custom-table tr:hover td {
           background: rgba(255, 255, 255, 0.02);
+        }
+        .table-pagination {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding-top: 16px;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .pagination-text {
+          color: var(--text-secondary);
+          font-size: 0.9rem;
+        }
+        .pagination-btn {
+          padding: 8px 16px;
+          font-size: 0.9rem;
         }
       `}</style>
     </div>

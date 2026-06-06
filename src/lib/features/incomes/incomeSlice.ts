@@ -12,16 +12,25 @@ interface Income {
   incomeDate?: string;
 }
 
+interface Pagination {
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  limit: number;
+}
+
 interface IncomeState {
   incomesList: Income[];
   loading: boolean;
   error: string | null;
+  pagination: Pagination | null;
 }
 
 const initialState: IncomeState = {
   incomesList: [],
   loading: false,
   error: null,
+  pagination: null,
 };
 
 // Async thunk for creating an income
@@ -42,10 +51,10 @@ export const createIncome = createAsyncThunk(
 // Async thunk for fetching all incomes
 export const getIncomes = createAsyncThunk(
   'incomes/getIncomes',
-  async (_, { rejectWithValue }) => {
+  async ({ page = 1, limit = 10 }: { page?: number, limit?: number } = {}, { rejectWithValue }) => {
     try {
-      const response = await api.get(incomes.GET_ALL);
-      return response.data.data.incomes || response.data.data; // Adapting to backend structure
+      const response = await api.get(`${incomes.GET_ALL}?page=${page}&limit=${limit}`);
+      return response.data.data; // Returning full data object (incomes + pagination)
     } catch (error: any) {
       return rejectWithValue(
         error.response?.data?.message || 'Failed to fetch incomes.'
@@ -113,7 +122,12 @@ const incomeSlice = createSlice({
       })
       .addCase(getIncomes.fulfilled, (state, action) => {
         state.loading = false;
-        state.incomesList = Array.isArray(action.payload) ? action.payload : [];
+        if (action.payload.incomes && action.payload.pagination) {
+          state.incomesList = action.payload.incomes;
+          state.pagination = action.payload.pagination;
+        } else {
+          state.incomesList = Array.isArray(action.payload) ? action.payload : [];
+        }
       })
       .addCase(getIncomes.rejected, (state, action) => {
         state.loading = false;

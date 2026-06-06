@@ -11,19 +11,25 @@ export default function IncomesPage() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { user, token } = useAppSelector((state) => state.auth);
-  const { incomesList, loading, error } = useAppSelector((state) => state.incomes);
+  const { incomesList, loading, error, pagination } = useAppSelector((state) => state.incomes);
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [incomeToDelete, setIncomeToDelete] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 10;
 
   useEffect(() => {
     if (user || token) {
-      dispatch(getIncomes());
+      dispatch(getIncomes({ page: currentPage, limit }));
     }
-  }, [dispatch, user, token]);
+  }, [dispatch, user, token, currentPage]);
 
   const handleEdit = (id: string) => {
     router.push(`/incomes/edit/${id}`);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
   };
 
   const handleDeleteClick = (id: string) => {
@@ -34,7 +40,7 @@ export default function IncomesPage() {
   const handleConfirmDelete = async () => {
     if (incomeToDelete) {
       await dispatch(deleteIncome({ id: incomeToDelete }));
-      dispatch(getIncomes());
+      dispatch(getIncomes({ page: currentPage, limit }));
     }
     setIsDeleteModalOpen(false);
     setIncomeToDelete(null);
@@ -95,6 +101,9 @@ export default function IncomesPage() {
           columns={columns}
           createButtonText="+ Create Income"
           createButtonLink="/incomes/create"
+          currentPage={pagination?.currentPage}
+          totalPages={pagination?.totalPages}
+          onPageChange={handlePageChange}
         />
       )}
 

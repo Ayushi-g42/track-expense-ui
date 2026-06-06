@@ -7,6 +7,17 @@ interface DashboardSummary {
   totalExpense: number;
   totalBalance: number;
   savings: number;
+  expenseTrend: {
+    month: string;
+    year: number;
+    total: number;
+  }[];
+  categoryWiseExpense: {
+    category: string;
+    month: number;
+    year: number;
+    total: number;
+  }[];
 }
 
 interface DashboardState {

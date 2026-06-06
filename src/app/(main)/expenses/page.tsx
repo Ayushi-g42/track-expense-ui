@@ -11,19 +11,25 @@ export default function ExpensesPage() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { user, token } = useAppSelector((state) => state.auth);
-  const { expensesList, loading, error } = useAppSelector((state) => state.expenses);
+  const { expensesList, loading, error, pagination } = useAppSelector((state) => state.expenses);
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [expenseToDelete, setExpenseToDelete] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const take = 10;
 
   useEffect(() => {
     if (user || token) {
-      dispatch(getExpenses());
+      dispatch(getExpenses({ page: currentPage, limit: take }));
     }
-  }, [dispatch, user, token]);
+  }, [dispatch, user, token, currentPage]);
 
   const handleEdit = (id: string) => {
     router.push(`/expenses/edit/${id}`);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
   };
 
   const handleDeleteClick = (id: string) => {
@@ -36,7 +42,7 @@ export default function ExpensesPage() {
       console.log('Deleting expense:', expenseToDelete);
 
       await dispatch(deleteExpense({ id: expenseToDelete }));
-      dispatch(getExpenses());
+      dispatch(getExpenses({ page: currentPage, limit: take }));
     }
     setIsDeleteModalOpen(false);
     setExpenseToDelete(null);
@@ -48,8 +54,8 @@ export default function ExpensesPage() {
       header: 'Action',
       render: (row) =>
         <div className="table-actions" style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-          <div 
-            onClick={() => handleEdit(row._id)} 
+          <div
+            onClick={() => handleEdit(row._id)}
             style={{ cursor: 'pointer', color: 'var(--text-secondary)', transition: 'color 0.2s' }}
             title="Edit"
             onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
@@ -60,8 +66,8 @@ export default function ExpensesPage() {
               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
             </svg>
           </div>
-          <div 
-            onClick={() => handleDeleteClick(row._id)} 
+          <div
+            onClick={() => handleDeleteClick(row._id)}
             style={{ cursor: 'pointer', color: 'var(--text-secondary)', transition: 'color 0.2s' }}
             title="Delete"
             onMouseEnter={(e) => e.currentTarget.style.color = 'var(--danger)'}
@@ -98,6 +104,9 @@ export default function ExpensesPage() {
           columns={columns}
           createButtonText="+ Create Expense"
           createButtonLink="/expenses/create"
+          currentPage={pagination?.currentPage}
+          totalPages={pagination?.totalPages}
+          onPageChange={handlePageChange}
         />
       )}
 

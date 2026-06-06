@@ -14,16 +14,25 @@ interface Expense {
   receiptUrl?: string;
 }
 
+interface Pagination {
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  limit: number;
+}
+
 interface ExpenseState {
   expensesList: Expense[];
   loading: boolean;
   error: string | null;
+  pagination: Pagination | null;
 }
 
 const initialState: ExpenseState = {
   expensesList: [],
   loading: false,
   error: null,
+  pagination: null,
 };
 
 // Async thunk for creating an expense
@@ -44,10 +53,10 @@ export const createExpense = createAsyncThunk(
 // Async thunk for fetching all expenses
 export const getExpenses = createAsyncThunk(
   'expenses/getExpenses',
-  async (_, { rejectWithValue }) => {
+  async ({ page = 1, limit = 10 }: { page?: number, limit?: number } = {}, { rejectWithValue }) => {
     try {
-      const response = await api.get(expenses.GET_ALL);
-      return response.data.data.expenses || response.data.data; // Adapting to backend structure
+      const response = await api.get(`${expenses.GET_ALL}?page=${page}&limit=${limit}`);
+      return response.data.data; // Returning full data object (expenses + pagination)
     } catch (error: any) {
       return rejectWithValue(
         error.response?.data?.message || 'Failed to fetch expenses.'
@@ -116,7 +125,12 @@ const expenseSlice = createSlice({
       })
       .addCase(getExpenses.fulfilled, (state, action) => {
         state.loading = false;
-        state.expensesList = Array.isArray(action.payload) ? action.payload : [];
+        if (action.payload.expenses && action.payload.pagination) {
+          state.expensesList = action.payload.expenses;
+          state.pagination = action.payload.pagination;
+        } else {
+          state.expensesList = Array.isArray(action.payload) ? action.payload : [];
+        }
       })
       .addCase(getExpenses.rejected, (state, action) => {
         state.loading = false;
