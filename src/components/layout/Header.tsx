@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useAppSelector, useAppDispatch } from '../../lib/hooks';
 import { logout } from '../../lib/features/auth/authSlice';
-import { useRouter } from 'next/navigation';
 
 export default function Header() {
   const pathname = usePathname();
@@ -27,7 +27,26 @@ export default function Header() {
     <header className="dashboard-header">
       <h2 className="page-title">{getPageTitle()}</h2>
       <div className="user-profile">
-        {user && <span className="user-name">{user.name}</span>}
+        {user && (() => {
+          const profileImg = user?.profileImg ?? null;
+
+          return (
+            <Link href="/update-profile" style={{ textDecoration: 'none' }}>
+              <div className="profile-avatar" title="Update Profile">
+                {profileImg ? (
+                  <div
+                    className="avatar-image"
+                    style={{ backgroundImage: `url(${profileImg})` }}
+                  />
+                ) : (
+                  <div className="avatar-initials">
+                    {user.name.charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+            </Link>
+          );
+        })()}
         <button onClick={handleLogout} className="logout-btn">
           Log Out
         </button>

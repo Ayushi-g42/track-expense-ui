@@ -1,6 +1,8 @@
 export const users = {
     LOGIN: '/users/login',
-    REGISTER: '/users/register'
+    REGISTER: '/users/register',
+    PROFILE_UPDATE: '/users/profile',
+    PROFILE_IMAGE_UPLOAD: '/users/upload',
 };
 
 export const expenses = {

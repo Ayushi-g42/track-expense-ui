@@ -7,6 +7,7 @@ interface User {
   name: string;
   email: string;
   role: string;
+  profileImg?: string;
 }
 
 interface AuthState {
@@ -59,6 +60,43 @@ export const registerUser = createAsyncThunk(
   }
 );
 
+// Async thunk for update profile
+export const updateProfile = createAsyncThunk(
+  'auth/updateProfile',
+  async (profileData: any, { rejectWithValue }) => {
+    try {
+      const response = await api.patch(users.PROFILE_UPDATE, profileData);
+      const updatedUser = response.data.data;
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+      }
+      return updatedUser;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to update profile. Please try again.'
+      );
+    }
+  }
+);
+
+export const uploadProfileImage = createAsyncThunk(
+  'auth/uploadProfileImage',
+  async (userData: any, { rejectWithValue }) => {
+    try {
+      const response = await api.post(users.PROFILE_IMAGE_UPLOAD, userData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+      });
+      return response.data.data; // ApiResponse { data: user }
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Update Profile failed. Please try again.'
+      );
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -100,7 +138,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       });
-      
+
     // Register
     builder
       .addCase(registerUser.pending, (state) => {
@@ -112,6 +150,37 @@ const authSlice = createSlice({
         // Not automatically logging in after register based on typical flows
       })
       .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
+
+    // Update Profile
+    builder
+      .addCase(updateProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
+
+
+    // Update Profile Image
+    builder
+      .addCase(uploadProfileImage.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(uploadProfileImage.fulfilled, (state, action) => {
+        state.loading = false;
+        // state.profilePicture = action.payload;
+      })
+      .addCase(uploadProfileImage.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
