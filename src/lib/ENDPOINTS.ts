@@ -3,6 +3,8 @@ export const users = {
     REGISTER: '/users/register',
     PROFILE_UPDATE: '/users/profile',
     PROFILE_IMAGE_UPLOAD: '/users/upload',
+    FORGOT_PASSWORD: '/users/forgot-password',
+    RESET_PASSWORD: '/users/reset-password',
 };
 
 export const expenses = {

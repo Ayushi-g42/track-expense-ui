@@ -45,16 +45,16 @@ export default function Login() {
           <h2>Welcome Back</h2>
           <p>Enter your details to access your account</p>
         </div>
-        
+
         {error && <div style={{ color: 'var(--danger)', textAlign: 'center', marginBottom: '10px' }}>{error}</div>}
-        
+
         <form className="auth-form animate-fade-in delay-200" onSubmit={handleSubmit(onSubmit)}>
           <div className="form-group">
             <label htmlFor="email">Email</label>
-            <input 
-              type="email" 
-              id="email" 
-              placeholder="you@example.com" 
+            <input
+              type="email"
+              id="email"
+              placeholder="you@example.com"
               {...register('email')}
               style={{ borderColor: errors.email ? 'var(--danger)' : '' }}
             />
@@ -62,10 +62,10 @@ export default function Login() {
           </div>
           <div className="form-group">
             <label htmlFor="password">Password</label>
-            <input 
-              type="password" 
-              id="password" 
-              placeholder="••••••••" 
+            <input
+              type="password"
+              id="password"
+              placeholder="••••••••"
               {...register('password')}
               style={{ borderColor: errors.password ? 'var(--danger)' : '' }}
             />
@@ -74,6 +74,11 @@ export default function Login() {
           <button type="submit" className="btn-primary btn-full" disabled={loading}>
             {loading ? 'Signing In...' : 'Sign In'}
           </button>
+          <div style={{ textAlign: 'center', marginTop: '10px' }}>
+            <Link href="/forgot-password" style={{ color: 'var(--accent-secondary)', fontSize: '0.9rem', textDecoration: 'none' }}>
+              Forgot Password?
+            </Link>
+          </div>
         </form>
         <div className="auth-footer animate-fade-in delay-300">
           <p>Don't have an account? <Link href="/register" className="auth-link">Sign up</Link></p>
