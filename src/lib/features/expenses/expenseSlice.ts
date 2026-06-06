@@ -76,7 +76,6 @@ export const deleteExpense = createAsyncThunk(
   'expenses/deleteExpense',
   async ({ id }: { id: string }, { rejectWithValue }) => {
     try {
-      console.log("calll");
       const response = await api.delete(`${expenses.DELETE}/${id}`);
       return response.data.data; // The created expense from backend
     } catch (error: any) {
