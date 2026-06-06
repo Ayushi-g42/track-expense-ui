@@ -1,12 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './features/auth/authSlice';
 import expenseReducer from './features/expenses/expenseSlice';
+import dashboardReducer from './features/dashboard/dashboardSlice';
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       auth: authReducer,
       expenses: expenseReducer,
+      dashboard: dashboardReducer,
     },
   });
 };

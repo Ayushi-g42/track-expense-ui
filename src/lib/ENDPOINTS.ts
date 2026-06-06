@@ -12,4 +12,15 @@ export const expenses = {
     DELETE: '/user-expenses/delete'
 };
 
+export const incomes = {
+    CREATE: '/user-incomes/create',
+    GET_ALL: '/user-incomes/list',
+    UPDATE: '/user-incomes/update',
+    DELETE: '/user-incomes/delete'
+};
+
+export const dashboard = {
+    SUMMARY: '/dashboard/summary'
+};
+
 export default users;
